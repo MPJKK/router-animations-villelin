@@ -38,4 +38,11 @@ export class MediaService {
     };
     return this.http.get(this.apiUrl + '/users/user', options);
   }
+
+  upload(form: FormData, token) {
+    const options = {
+      headers: new HttpHeaders().set('x-access-token', token)
+    };
+    return this.http.post(this.apiUrl + '/media', form, options);
+  }
 }

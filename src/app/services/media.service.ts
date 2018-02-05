@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {Login} from '../models/login';
 
 @Injectable()
 export class MediaService {
@@ -7,7 +9,7 @@ export class MediaService {
   apiUrl = 'http://media.mw.metropolia.fi/wbma';
   mediaUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
   getAllMedia() {
@@ -19,11 +21,21 @@ export class MediaService {
   }
 
   loginUser(user) {
-    return this.http.post(this.apiUrl + '/login', user).
+    return this.http.post<Login>(this.apiUrl + '/login', user).
         subscribe((response) => {
           // Toimii: etusivulle
+          localStorage.setItem('token', response.token);
+          this.router.navigate(['front']);
         }, (error: HttpErrorResponse) => {
           // Virhe: loginiin
+          this.router.navigate(['login']);
         });
+  }
+
+  getUserData(token) {
+    const options = {
+      headers: new HttpHeaders().set('x-access-token', token)
+    };
+    return this.http.get(this.apiUrl + '/users/user', options);
   }
 }

@@ -1,5 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {
+  HttpClient, HttpErrorResponse, HttpHeaders,
+  HttpParams,
+} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {Login} from '../models/login';
 
@@ -17,6 +20,17 @@ export class MediaService {
 
   getAllMedia() {
     return this.http.get(this.apiUrl + '/media');
+  }
+
+  getNew() {
+    const params = new HttpParams({
+      fromObject: {
+        start: '0',
+        limit: '10',
+      }
+    });
+
+    return this.http.get(this.apiUrl + '/media', {params: params});
   }
 
   newUser(user) {

@@ -6,10 +6,13 @@ import {Login} from '../models/login';
 @Injectable()
 export class MediaService {
 
+  loggedIn: boolean;
+
   apiUrl = 'http://media.mw.metropolia.fi/wbma';
   mediaUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
   constructor(private http: HttpClient, private router: Router) {
+    this.loggedIn = false;
   }
 
   getAllMedia() {
@@ -25,6 +28,7 @@ export class MediaService {
         subscribe((response) => {
           // Toimii: etusivulle
           localStorage.setItem('token', response.token);
+          this.loggedIn = true;
           this.router.navigate(['front']);
         }, (error: HttpErrorResponse) => {
           // Virhe: loginiin
@@ -44,5 +48,9 @@ export class MediaService {
       headers: new HttpHeaders().set('x-access-token', token)
     };
     return this.http.post(this.apiUrl + '/media', form, options);
+  }
+
+  logout() {
+    this.loggedIn = false;
   }
 }

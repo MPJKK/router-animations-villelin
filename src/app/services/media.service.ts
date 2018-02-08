@@ -16,6 +16,9 @@ export class MediaService {
 
   constructor(private http: HttpClient, private router: Router) {
     this.loggedIn = false;
+    if (localStorage.getItem('token') !== undefined) {
+      this.loggedIn = true;
+    }
   }
 
   getAllMedia() {
